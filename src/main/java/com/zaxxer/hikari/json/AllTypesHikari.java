@@ -27,13 +27,14 @@ import com.zaxxer.hikari.json.obj.AllType;
 @State(Scope.Benchmark)
 public class AllTypesHikari
 {
-	private byte[] input;
-	private final static ObjectMapper objectMapper = JsonFactory.option(Option.FIELD_ACCESS, Option.CONSISTENT_STRUCTURE, Option.MEMBERS_ASCII, Option.VALUES_ASCII).create();
+	private final static ObjectMapper objectMapper = JsonFactory.option(Option.FIELD_ACCESS, Option.CONSISTENT_STRUCTURE, Option.MEMBERS_ASCII, Option.VALUES_UTF8).create();
+	private ByteArrayInputStream bais;
 
 	@Setup
     public void setup()
     {
 		File file = new File("src/test/resources/AllTypes.json");
+		byte[] input;
 		try (InputStream is = new FileInputStream(file)) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			IOUtils.copy(is, baos);
@@ -42,11 +43,15 @@ public class AllTypesHikari
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		bais = new ByteArrayInputStream(input);
+		bais.mark(0);
     }
 
 	@Benchmark
-    public AllType parseMenu() throws SQLException
+    public AllType inputStream() throws SQLException
     {
-		return objectMapper.readValue(new ByteArrayInputStream(input), AllType.class);
+		bais.reset();
+		return objectMapper.readValue(bais, AllType.class);
     }
 }

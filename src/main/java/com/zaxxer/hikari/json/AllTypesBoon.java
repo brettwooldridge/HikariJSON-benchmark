@@ -29,13 +29,14 @@ import com.zaxxer.hikari.json.obj.AllType;
 @State(Scope.Benchmark)
 public class AllTypesBoon
 {
-	private byte[] input;
 	private final JsonParserAndMapper mapper = new JsonParserFactory ().create ();
+	private ByteArrayInputStream bais;
 	
 	@Setup
     public void setup()
     {
 		File file = new File("src/test/resources/AllTypes.json");
+		byte[] input;
 		try (InputStream is = new FileInputStream(file)) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			IOUtils.copy(is, baos);
@@ -44,11 +45,15 @@ public class AllTypesBoon
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		bais = new ByteArrayInputStream(input);
+		bais.mark(0);
     }
 
 	@Benchmark
-    public AllType parseMenu() throws SQLException
+    public AllType inputStream() throws SQLException
     {
-		return mapper.parse(AllType.class, new ByteArrayInputStream(input), Charset.defaultCharset());
+		bais.reset();
+		return mapper.parse(AllType.class, bais, Charset.defaultCharset());
     }
 }

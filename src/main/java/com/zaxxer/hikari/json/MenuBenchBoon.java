@@ -29,13 +29,14 @@ import com.zaxxer.hikari.json.obj.MenuBar;
 @State(Scope.Benchmark)
 public class MenuBenchBoon
 {
-	private byte[] input;
 	private final JsonParserAndMapper mapper = new JsonParserFactory ().create ();
+	private ByteArrayInputStream bais;
 	
 	@Setup
     public void setup()
     {
 		File file = new File("src/test/resources/menu.json");
+		byte[] input;
 		try (InputStream is = new FileInputStream(file)) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			IOUtils.copy(is, baos);
@@ -44,11 +45,15 @@ public class MenuBenchBoon
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		bais = new ByteArrayInputStream(input);
+		bais.mark(0);
     }
 
 	@Benchmark
-    public MenuBar parseMenu() throws SQLException
+    public MenuBar inputStream() throws SQLException
     {
-		return mapper.parse(MenuBar.class, new ByteArrayInputStream(input), Charset.defaultCharset());
+		bais.reset();
+		return mapper.parse(MenuBar.class, bais, Charset.defaultCharset());
     }
 }
