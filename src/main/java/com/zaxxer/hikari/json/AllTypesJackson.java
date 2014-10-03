@@ -18,22 +18,24 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.zaxxer.hikari.json.JsonFactory.Option;
-import com.zaxxer.hikari.json.obj.MenuBar;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zaxxer.hikari.json.obj.AllType;
 
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class MenuBenchHikari
+public class AllTypesJackson
 {
-	private final static ObjectMapper objectMapper = JsonFactory.option(Option.FIELD_ACCESS, Option.CONSISTENT_STRUCTURE, Option.MEMBERS_ASCII, Option.VALUES_UTF8).create();
+	private final ObjectMapper mapper = new ObjectMapper();
 	private ByteArrayInputStream bais;
-
+	
 	@Setup
     public void setup()
     {
-		File file = new File("src/test/resources/menu.json");
+		File file = new File("src/test/resources/AllTypes.json");
 		byte[] input;
 		try (InputStream is = new FileInputStream(file)) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -49,9 +51,9 @@ public class MenuBenchHikari
     }
 
 	@Benchmark
-    public MenuBar inputStream() throws SQLException
+    public AllType inputStream() throws JsonParseException, JsonMappingException, IOException
     {
 		bais.reset();
-		return objectMapper.readValue(bais, MenuBar.class);
+		return mapper.readValue(bais, AllType.class);
     }
 }

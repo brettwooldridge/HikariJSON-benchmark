@@ -6,13 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
-import org.boon.json.JsonParserAndMapper;
-import org.boon.json.JsonParserFactory;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -21,15 +17,18 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.json.obj.MenuBar;
 
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class MenuBenchBoon
+public class MenuJackson
 {
-	private final JsonParserAndMapper mapper = new JsonParserFactory ().create ();
+	private final ObjectMapper mapper = new ObjectMapper();
 	private ByteArrayInputStream bais;
 	
 	@Setup
@@ -51,9 +50,9 @@ public class MenuBenchBoon
     }
 
 	@Benchmark
-    public MenuBar inputStream() throws SQLException
+    public MenuBar inputStream() throws JsonParseException, JsonMappingException, IOException
     {
 		bais.reset();
-		return mapper.parse(MenuBar.class, bais, Charset.defaultCharset());
+		return mapper.readValue(bais, MenuBar.class);
     }
 }
