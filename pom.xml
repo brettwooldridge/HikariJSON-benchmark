@@ -43,7 +43,7 @@ questions.
       <dependency>
          <groupId>io.fastjson</groupId>
          <artifactId>boon</artifactId>
-         <version>0.25</version>
+         <version>0.28</version>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
