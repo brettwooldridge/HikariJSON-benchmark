@@ -20,13 +20,14 @@ import org.openjdk.jmh.annotations.State;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.zaxxer.hikari.json.obj.AllType;
 
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class AllTypesJackson
+public class AllTypesJacksonAfterburner
 {
 	private final ObjectMapper mapper = new ObjectMapper();
 	private ByteArrayInputStream bais;
@@ -34,6 +35,8 @@ public class AllTypesJackson
 	@Setup
     public void setup()
     {
+		mapper.registerModule(new AfterburnerModule());
+
 		File file = new File("src/test/resources/AllTypes.json");
 		byte[] input;
 		try (InputStream is = new FileInputStream(file)) {
