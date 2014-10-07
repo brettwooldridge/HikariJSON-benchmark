@@ -18,7 +18,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.zaxxer.hikari.json.JsonFactory.Option;
 import com.zaxxer.hikari.json.obj.AllType;
 
 
@@ -27,7 +26,7 @@ import com.zaxxer.hikari.json.obj.AllType;
 @State(Scope.Benchmark)
 public class AllTypesHikari
 {
-	private final static ObjectMapper objectMapper = JsonFactory.option(Option.FIELD_ACCESS, Option.CONSISTENT_STRUCTURE, Option.MEMBERS_ASCII, Option.VALUES_UTF8).create();
+	private final static ObjectMapper objectMapper = JsonFactory.create();
 	private ByteArrayInputStream bais;
 
 	@Setup
