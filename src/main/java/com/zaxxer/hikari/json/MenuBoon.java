@@ -29,7 +29,7 @@ import com.zaxxer.hikari.json.obj.MenuBar;
 @State(Scope.Benchmark)
 public class MenuBoon
 {
-	private final JsonParserAndMapper mapper = new JsonParserFactory ().create ();
+	private final JsonParserAndMapper mapper = new JsonParserFactory().createFastObjectMapperParser();
 	private ByteArrayInputStream bais;
 	
 	@Setup

@@ -29,7 +29,7 @@ import com.zaxxer.hikari.json.obj.AllType;
 @State(Scope.Benchmark)
 public class AllTypesBoon
 {
-	private final JsonParserAndMapper mapper = new JsonParserFactory ().create ();
+	private final JsonParserAndMapper mapper = new JsonParserFactory().createFastObjectMapperParser();
 	private ByteArrayInputStream bais;
 	
 	@Setup
