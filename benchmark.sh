@@ -11,10 +11,10 @@ JAVA_OPTS="-server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods -Xmx512m -D_j
 if [[ "quick" == "$1" ]]; then
    java -jar ./target/microbenchmarks.jar -jvmArgs "$JAVA_OPTS" -wi 3 -i 6 -t 1 -f 2 $2 $3 $4 $5 $6 $7 $8 $9
 elif [[ "medium" == "$1" ]]; then
-   java -jar ./target/microbenchmarks.jar -jvmArgs "$JAVA_OPTS" -w 3 -t 1 -f 3 $2 $3 $4 $5 $6 $7 $8 $9
+   java -jar ./target/microbenchmarks.jar -jvmArgs "$JAVA_OPTS" -wi 3 -i 10 -t 1 -f 3 $2 $3 $4 $5 $6 $7 $8 $9
 elif [[ "flight" == "$1" ]]; then
    JAVA_OPTS="$JAVA_OPTS -XX:+UnlockCommercialFeatures -XX:+FlightRecorder"
-   java -jar ./target/microbenchmarks.jar -jvmArgs "$JAVA_OPTS" -w 3 -t 1 -f 1 -i 500 $2 $3 $4 $5 $6 $7 $8 $9
+   java -jar ./target/microbenchmarks.jar -jvmArgs "$JAVA_OPTS" -wi 3 -t 1 -f 1 -i 500 $2 $3 $4 $5 $6 $7 $8 $9
 elif [[ "profile" == "$1" ]]; then
    java -server -agentpath:/Applications/jprofiler8/bin/macos/libjprofilerti.jnilib=port=8849 -jar ./target/microbenchmarks.jar -r 5 -wi 8 -i 8 -t 1 -f 0 $2 $3 $4 $5 $6 $7 $8 $9
 elif [[ "debug" == "$1" ]]; then
